@@ -30,4 +30,4 @@ scgi.server    = ( ".groovy" => (
 ))
 }}}
 
-This assumes that Groovy Runner will be on the local machine on port 4444. You can configure the port that Groovy Runner opens from the start command.
+This assumes that Groovy Runner will be on the local machine on port 4444 and that you want to use the extension .groovy as groovy files. You can configure the port that Groovy Runner opens from the start command.
