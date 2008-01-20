@@ -1,0 +1,12 @@
+#labels Phase-Deploy
+# How to run
+
+= Getting started =
+
+  # Download the zip file from the downloads section
+  # Unzip it
+  # Enable the SCGI handler for .groovy files in your web server (see WebServerInstallation)
+  # Run GroovyRun. (java -jar GroovyLamp.jar -port=4444, change port to be the same as in the SCGI configuration)
+  # Copy the test.groovy file to your web server's doc root
+  # Restart your web server
+  # Navigate to /test.groovy in your browser!
