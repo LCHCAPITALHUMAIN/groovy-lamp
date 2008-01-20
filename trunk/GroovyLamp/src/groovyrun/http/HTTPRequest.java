@@ -74,7 +74,17 @@ public class HTTPRequest {
         //
         //  Parse the cookies supplied by the browser
         //
-        this.parseCookies();
+        try {
+            
+            this.parseCookies();
+            System.out.println(this.cookies);
+            
+        } catch(UnsupportedEncodingException ex) {
+            
+            System.err.println("Could not parse COOKIES");
+            ex.printStackTrace();
+            
+        }
         
     }
     
@@ -93,11 +103,28 @@ public class HTTPRequest {
         return this.cookies.get(key);
     }
     
-    private void parseCookies()
+    private void parseCookies() throws UnsupportedEncodingException
     {
         
-        this.cookies = new HashMap();
+        this.cookies = new HashMap<String, String>();
         
+        String cookie_string = this.env.get("HTTP_COOKIE");
+        
+        if (cookie_string == null) return;
+        
+        cookie_string = cookie_string.trim();
+        String[] pairs = cookie_string.split("; ");
+        
+        if (cookie_string.equals("")) return;
+        
+        for (int i=0; i<pairs.length; i++) {
+            String[] fields = pairs[i].split("=");
+            String name = URLDecoder.decode(fields[0], "UTF-8");
+            String value = URLDecoder.decode(fields[1], "UTF-8");
+            this.cookies.put(name, value);
+        }
+        
+
     }
     
     private String getContent() throws IOException
