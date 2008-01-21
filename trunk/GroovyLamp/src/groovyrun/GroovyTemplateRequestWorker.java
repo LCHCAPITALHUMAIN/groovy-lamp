@@ -29,9 +29,9 @@ public class GroovyTemplateRequestWorker extends RequestWorker{
     
     TemplateEngine eng;
             
-    public GroovyTemplateRequestWorker(InputStream in, OutputStream out) {
+    public GroovyTemplateRequestWorker(SCGIApplicationServer server, InputStream in, OutputStream out) {
         
-        super(in, out);
+        super(server, in, out);
         
         eng = new SimpleTemplateEngine();
         

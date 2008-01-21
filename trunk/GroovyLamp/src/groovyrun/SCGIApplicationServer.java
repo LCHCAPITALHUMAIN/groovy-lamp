@@ -9,10 +9,10 @@
 
 package groovyrun;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
+import groovyrun.logging.Log;
 /**
  *
  * @author alastairjames
@@ -21,9 +21,10 @@ public class SCGIApplicationServer implements Runnable {
     
     private boolean running;
     private ServerSocket server_socket;
-    private int port = 4444;
+    private int port;
     private Thread thread;
     
+    private Log log;
     
     /** Creates a new instance of ApplicationServer */
     public SCGIApplicationServer(int port) {
@@ -31,11 +32,13 @@ public class SCGIApplicationServer implements Runnable {
         this.port = port;
         this.thread = new Thread(this);
         
+        this.log = new Log();
+        
     }
     
     public void run()
     {
-        echo("Starting server");
+        this.log.notice("Starting server");
         
         try{
         
@@ -44,14 +47,14 @@ public class SCGIApplicationServer implements Runnable {
         } catch (Exception e) {
             
             
-            echo("Unable to open server socket.");
+            this.log.error("Unable to open server socket.");
             running = false;
             //throw e;
             return;
             
         }
         
-        echo("SCGIApplicationServer running on port: "+server_socket.getLocalPort());
+        this.log.notice("SCGIApplicationServer running on port: "+server_socket.getLocalPort());
         
         while(running)
         {
@@ -60,15 +63,15 @@ public class SCGIApplicationServer implements Runnable {
             
                 Socket client_socket = server_socket.accept();
 
-                echo("Accepted new connection");
+                this.log.notice("Accepted new connection");
                 
-                (new GroovyTemplateRequestWorker(client_socket.getInputStream(), client_socket.getOutputStream())).start();
+                (new GroovyTemplateRequestWorker(this, client_socket.getInputStream(), client_socket.getOutputStream())).start();
                 
-                echo("Dispatched");
+                this.log.notice("Dispatched");
                 
             } catch (Exception e) {
                 
-                echo("ERROR: in accept loop.");
+                this.log.error("ERROR: in accept loop.");
                 
             }
         }
@@ -79,7 +82,7 @@ public class SCGIApplicationServer implements Runnable {
         
         } catch (Exception e) {
             
-            echo("Unable to close server socket");
+            this.log.error("Unable to close server socket");
             //throw e;
             return;
             
@@ -101,6 +104,11 @@ public class SCGIApplicationServer implements Runnable {
         
     }
     
+    public Log getLog()
+    {
+        return this.log;
+    }
+    
     private void openServerSocket() throws Exception
     {
     
@@ -113,11 +121,6 @@ public class SCGIApplicationServer implements Runnable {
     
         server_socket.close();
     
-    }
-    
-    public static void echo(String str)
-    {
-        System.out.println(str);
     }
     
 }

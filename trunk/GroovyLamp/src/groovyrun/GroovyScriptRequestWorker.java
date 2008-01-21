@@ -26,9 +26,9 @@ public class GroovyScriptRequestWorker extends RequestWorker{
     
     GroovyScriptEngine gse;
     
-    public GroovyScriptRequestWorker(InputStream in, OutputStream out) {
+    public GroovyScriptRequestWorker(SCGIApplicationServer server, InputStream in, OutputStream out) {
         
-        super(in, out);
+        super(server, in, out);
         
         try {
           

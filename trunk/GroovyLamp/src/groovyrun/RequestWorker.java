@@ -26,10 +26,12 @@ public class RequestWorker implements Runnable {
     BufferedInputStream in;
     OutputStream out;
     long time_started;
+    SCGIApplicationServer server;
     
     /** Creates a new instance of RequestWorker */
-    public RequestWorker(InputStream in, OutputStream out) {
+    public RequestWorker(SCGIApplicationServer server, InputStream in, OutputStream out) {
         
+        this.server = server;
         this.thread = new Thread(this);
         this.in = new BufferedInputStream(in, 4096);
         this.out = out;
@@ -55,23 +57,22 @@ public class RequestWorker implements Runnable {
             
             work(request, response);
             
-            PrintWriter writer = new PrintWriter(out);
-            response.writeTo(writer);
-            writer.close();
+            PrintWriter out = new PrintWriter(this.out);
+            response.writeTo(out);
+            out.close();
             
             long time = (System.currentTimeMillis() - time_started);
             float ftime = time / 1000.0f;
             
-            //out.write(("Content-type: text/html\n\n").getBytes());
-            System.out.println("Time taken "+ftime+" seconds");
+            this.server.getLog().notice("Time taken "+ftime+" seconds");
             
             in.close();
             out.close();
-            echo("Worker done!");
+            this.server.getLog().notice("Worker done!");
             
         } catch (Exception e) {
             
-            echo("ERROR: Exception in worker");
+            this.server.getLog().error("ERROR: Exception in worker");
             e.printStackTrace();
             
         }
@@ -81,11 +82,6 @@ public class RequestWorker implements Runnable {
     public void work(HTTPRequest request, HTTPResponse response)
     {
         
-    }
-    
-    public static void echo(String str)
-    {
-        System.out.println(str);
     }
     
 }
