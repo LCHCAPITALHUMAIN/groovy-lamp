@@ -1,4 +1,4 @@
-#summary Describes how toy create groovy pages
+#summary Describes how to create groovy pages
 #labels Phase-Implementation
 
 = Template Language =
