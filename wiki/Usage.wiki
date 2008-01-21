@@ -14,9 +14,7 @@ def title = "Hello!"
 <h1>$title</h1>
 
 <%
-
 out.println "Bye!"
-
 %>
 
 </html>
