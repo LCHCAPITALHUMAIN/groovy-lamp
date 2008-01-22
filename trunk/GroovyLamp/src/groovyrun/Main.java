@@ -24,11 +24,11 @@ public class Main extends CommandLineTool {
         
         if (checkRequiredArguments(required, arguments))
         {
-            boolean template_mode = false;
+            boolean template_mode = true;
             
-            if (arguments.containsKey("mode") && (arguments.get("mode").equals("template")))
+            if (arguments.containsKey("mode") && (arguments.get("mode").equals("script")))
             {
-                template_mode = true;
+                template_mode = false;
             }
             
             SCGIApplicationServer app_server = new SCGIApplicationServer(Integer.parseInt(arguments.get("port")), template_mode);
