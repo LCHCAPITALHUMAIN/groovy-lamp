@@ -38,7 +38,7 @@ public class GroovyTemplateRequestWorker extends RequestWorker{
     }
 
     
-    public void work(HTTPRequest request, HTTPResponse response)
+    public void work(HTTPRequest request, HTTPResponse response) throws Exception
     {
         
         try {
@@ -62,13 +62,8 @@ public class GroovyTemplateRequestWorker extends RequestWorker{
             
             response.setStatus(404);
           
-        } catch (Exception ex) {
-            
-            ex.printStackTrace();
-            
-            response.setStatus(500);
-            
-        }
+        } 
+        
     }
     
 }

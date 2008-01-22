@@ -51,35 +51,45 @@ public class RequestWorker implements Runnable {
         {
         
             HashMap<String, String> env = SCGIParser.parse(in);
-            
             HTTPRequest request = new HTTPRequest(env, in);
             HTTPResponse response = new HTTPResponse();
+
+            // General catch block to catch all errors in user code
+            try{
             
-            work(request, response);
+                work(request, response);
             
-            PrintWriter out = new PrintWriter(this.out);
-            response.writeTo(out);
-            out.close();
+            } catch(Exception e){
+                
+                this.server.getLog().error("ERROR: Exception in work method");
+                response.setStatus(500);
+                response.clearBuffer();
+                
+            }
+            
+            PrintWriter pout = new PrintWriter(this.out);
+            response.writeTo(pout);
+            pout.close();
             
             long time = (System.currentTimeMillis() - time_started);
             float ftime = time / 1000.0f;
-            
             this.server.getLog().notice("Time taken "+ftime+" seconds");
             
             in.close();
             out.close();
             this.server.getLog().notice("Worker done!");
             
-        } catch (Exception e) {
             
-            this.server.getLog().error("ERROR: Exception in worker");
+        } catch (IOException e) {
+            
+            this.server.getLog().error("ERROR: IO Exception in worker class");
             e.printStackTrace();
             
-        }
+        } 
         
     }
     
-    public void work(HTTPRequest request, HTTPResponse response)
+    public void work(HTTPRequest request, HTTPResponse response) throws Exception
     {
         
     }
