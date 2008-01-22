@@ -5,7 +5,6 @@
 
 package groovyrun.http;
 
-
 import java.util.HashMap;
 import java.net.*;
 import java.io.*;
@@ -89,10 +88,22 @@ public class HTTPRequest {
     }
     
     /*
+     *  Returns the IP address of the client 
+     */
+    public String getRemoteAddr()
+    {
+        return this.env.get("REMOTE_ADDR");
+    }
+    
+    public String getHTTPMethod()
+    {
+        return this.env.get("REQUEST_METHOD");
+    }
+    
+    /*
      *  Cookies section
      * 
      */
-    
     public boolean hasCookie(String key)
     {
         return this.cookies.containsKey(key);

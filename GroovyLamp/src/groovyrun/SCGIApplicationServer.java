@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import groovyrun.logging.Log;
+
 /**
  *
  * @author alastairjames
@@ -23,13 +24,15 @@ public class SCGIApplicationServer implements Runnable {
     private ServerSocket server_socket;
     private int port;
     private Thread thread;
+    private boolean template_mode;
     
     private Log log;
     
     /** Creates a new instance of ApplicationServer */
-    public SCGIApplicationServer(int port) {
+    public SCGIApplicationServer(int port, boolean template_mode) {
         
         this.port = port;
+        this.template_mode = template_mode;
         this.thread = new Thread(this);
         
         this.log = new Log();
@@ -65,8 +68,11 @@ public class SCGIApplicationServer implements Runnable {
 
                 this.log.notice("Accepted new connection");
                 
-                (new GroovyTemplateRequestWorker(this, client_socket.getInputStream(), client_socket.getOutputStream())).start();
-                
+                if (this.template_mode)
+                    (new GroovyTemplateRequestWorker(this, client_socket.getInputStream(), client_socket.getOutputStream())).start();
+                else
+                    (new GroovyScriptRequestWorker(this, client_socket.getInputStream(), client_socket.getOutputStream())).start();
+                    
                 this.log.notice("Dispatched");
                 
             } catch (Exception e) {

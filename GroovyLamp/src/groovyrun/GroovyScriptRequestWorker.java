@@ -44,34 +44,26 @@ public class GroovyScriptRequestWorker extends RequestWorker{
     }
 
     
-    public void work(HTTPRequest request)
+    public void work(HTTPRequest request, HTTPResponse response) throws Exception
     {
         try {
 
- 
             Binding binding = new Binding();
-            binding.setVariable("out", new PrintStream(out));
-            //binding.setVariable("in", in);
-
+            binding.setVariable("out", response.getOutputWriter());
             binding.setVariable("request", request);
+            binding.setVariable("response", response);
             
             gse.run(request.env.get("SCRIPT_FILENAME"), binding);
 
-        } catch (Exception ex) {
+            response.setStatus(200);
             
+        } catch (ResourceException ex) {
+
             ex.printStackTrace();
-            try 
-            {
             
-                out.write(("Status: 500\n\n").getBytes());
-            
-            } catch (IOException e) {
-                
-                //Shit pants...
-                
-            }
-            
-        }
+            response.setStatus(404);
+          
+        } 
     }
     
 }

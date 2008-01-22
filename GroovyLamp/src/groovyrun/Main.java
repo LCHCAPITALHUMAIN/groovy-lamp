@@ -24,7 +24,14 @@ public class Main extends CommandLineTool {
         
         if (checkRequiredArguments(required, arguments))
         {
-            SCGIApplicationServer app_server = new SCGIApplicationServer(Integer.parseInt(arguments.get("port")));
+            boolean template_mode = false;
+            
+            if (arguments.containsKey("mode") && (arguments.get("mode").equals("template")))
+            {
+                template_mode = true;
+            }
+            
+            SCGIApplicationServer app_server = new SCGIApplicationServer(Integer.parseInt(arguments.get("port")), template_mode);
             app_server.start();
             
         } else {
@@ -40,7 +47,7 @@ public class Main extends CommandLineTool {
         System.err.println("Usage:");
         System.err.println("------");
         
-        System.err.println("java -jar groovyscgi.jar -port=xxxx");
+        System.err.println("java -jar groovyscgi.jar -port=xxxx -mode=[template/script]");
         System.err.println();
         
         System.exit(1);
